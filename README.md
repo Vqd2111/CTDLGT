@@ -14,7 +14,7 @@ Dự án bài tập môn **Cấu trúc dữ liệu và Giải thuật**. Ứng d
 
 - 📥 **Chèn có thứ tự (Sorted Insert):** Tự động sắp xếp file ngay khi thêm vào dựa trên trật tự thời gian tăng dần.
 - 🧮 **Tính toán dung lượng:** Duyệt danh sách để tính tổng kích thước các file hiện có trong bộ nhớ.
-- 🗑️ **Thuật toán Backup thông minh:** Tự động dò tìm và giải phóng (`delete`) các file có dung lượng nhỏ nhất để tối ưu hóa không gian lưu trữ cho USB 32GB.
+- 🗑️ **Thuật toán Backup:** Tự động dò tìm và giải phóng (`delete`) các file có dung lượng nhỏ nhất để tối ưu hóa không gian lưu trữ cho USB 32GB.
 
 ---
 
