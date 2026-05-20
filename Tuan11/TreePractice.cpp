@@ -2,24 +2,21 @@
 #include <string>
 using namespace std;
 
-// Step 2: Them cac ham tao 4 cay dac biet
+// Step 3: Cai dat thuat toan duyet cay NLR, LNR, LRN
 struct Node { string data; Node* left; Node* right; };
 Node* CreateNode(string val) { Node* p = new Node; p->data = val; p->left = p->right = NULL; return p; }
 
-Node* BuildFull() {
-    Node* t = CreateNode("A"); t->left = CreateNode("B"); t->right = CreateNode("C"); return t;
+void PreOrder(Node* root) {
+    if (root != NULL) { cout << root->data << " "; PreOrder(root->left); PreOrder(root->right); }
 }
-Node* BuildLeft() {
-    Node* t = CreateNode("A"); t->left = CreateNode("B"); return t;
+void InOrder(Node* root) {
+    if (root != NULL) { InOrder(root->left); cout << root->data << " "; InOrder(root->right); }
 }
-Node* BuildRight() {
-    Node* t = CreateNode("A"); t->right = CreateNode("B"); return t;
-}
-Node* BuildZig() {
-    Node* t = CreateNode("A"); t->left = CreateNode("B"); t->left->right = CreateNode("C"); return t;
+void PostOrder(Node* root) {
+    if (root != NULL) { PostOrder(root->left); PostOrder(root->right); cout << root->data << " "; }
 }
 
 int main() {
-    cout << "--- LINKED LIST TREE BUILD SUCCESS ---\n";
+    cout << "--- TRAVERSAL ALGORITHMS ADDED ---\n";
     return 0;
 }
