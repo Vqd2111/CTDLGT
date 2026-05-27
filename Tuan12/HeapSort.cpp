@@ -10,26 +10,29 @@ void printArray(const vector<int>& arr) {
 }
 
 void heapify(vector<int>& arr, int n, int i) {
-    int largest = i;
-    int left = 2 * i + 1;
-    int right = 2 * i + 2;
+    int largest = i; int left = 2 * i + 1; int right = 2 * i + 2;
     if (left < n && arr[left] > arr[largest]) largest = left;
     if (right < n && arr[right] > arr[largest]) largest = right;
-    if (largest != i) {
-        swap(arr[i], arr[largest]);
-        heapify(arr, n, largest);
-    }
+    if (largest != i) { swap(arr[i], arr[largest]); heapify(arr, n, largest); }
 }
 
-// Ham sap xep vun dong (Khung logic)
+// Bo sung log theo dung yeu cau barem
 void heapSort(vector<int>& arr) {
     int n = arr.size();
+    cout << "Tao dong ban dau" << endl;
     for (int i = n / 2 - 1; i >= 0; i--) {
         heapify(arr, n, i);
+        cout << "Sau khi vun dong tai node" << i << ": ";
+        printArray(arr);
     }
+    cout << "Sap xep vun dong " << endl;
     for (int i = n - 1; i > 0; i--) {
         swap(arr[0], arr[i]);
+        cout << "Hoan vi nut goc voi mang dang xet[" << i << "]: ";
+        printArray(arr);
         heapify(arr, i, 0);
+        cout << "Vun dong lai nut goc: ";
+        printArray(arr);
     }
 }
 
