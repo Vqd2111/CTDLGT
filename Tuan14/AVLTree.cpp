@@ -1,4 +1,5 @@
 #include <iostream>
+#include <vector>
 #include <algorithm>
 
 using namespace std;
@@ -50,6 +51,7 @@ Node* createNode(int value) {
 
 Node* insertNode(Node* node, int value) {
     if (node == NULL) return createNode(value);
+
     if (value < node->data) node->left = insertNode(node->left, value);
     else if (value > node->data) node->right = insertNode(node->right, value);
     else return node;
@@ -70,9 +72,6 @@ Node* insertNode(Node* node, int value) {
     return node;
 }
 
-// 
-// BO SUNG CAC HAM DUYET CAY 
-// 
 void preOrder(Node* root) {
     if (root != NULL) {
         cout << root->data << " ";
@@ -90,7 +89,26 @@ void inOrder(Node* root) {
 }
 
 int main() {
+    cout << "=== BAI TAP TUAN 14: CAY CAN BANG AVL ===\n\n";
     Node* root = NULL;
-    cout << "--- AVL ALGORITHM AND TRAVERSALS COMPLETED ---\n";
+    
+    // Day so dau vao tu de bai Tuan 14
+    vector<int> inputs = {32, 51, 27, 83, 96, 11, 45, 75, 66};
+    
+    cout << "-> Tien hanh them cac phan tu vao cay AVL:\n";
+    for (int x : inputs) {
+        root = insertNode(root, x);
+    }
+    cout << "Da dung xong cay AVL tu dong can bang!\n\n";
+    
+    // In ket qua duyet cay 
+    cout << "1. Ket qua duyet theo thu tu Truoc (Pre-order):\n[ ";
+    preOrder(root);
+    cout << "]\n\n";
+    
+    cout << "2. Ket qua duyet theo thu tu Giua (In-order):\n[ ";
+    inOrder(root);
+    cout << "]\n";
+    
     return 0;
 }
