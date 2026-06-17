@@ -1,20 +1,21 @@
-// (Cac phan header giu nguyen...)
-void duyetRongMaTran(int batDau, int maTranKe[SO_DINH][SO_DINH], const char* ten[]) {
+void duyetRongDanhSach(int batDau, NutDanhSach* dsDau[], const char* ten[]) {
     bool daTham[SO_DINH] = {false};
     HangDoi hd; hd.khoiTao();
 
     daTham[batDau] = true;
     hd.themVao(batDau);
 
-    cout << "BFS (Ma tran ke):      ";
+    cout << "BFS (Danh sach kề):    ";
     while (!hd.laRong()) {
         int u = hd.layRa();
         cout << ten[u] << " -> ";
-        for (int v = 0; v < SO_DINH; v++) {
-            if (maTranKe[u][v] == 1 && !daTham[v]) {
-                daTham[v] = true;
-                hd.themVao(v);
+        NutDanhSach* hienTai = dsDau[u];
+        while (hienTai != nullptr) {
+            if (!daTham[hienTai->maSoTinh]) {
+                daTham[hienTai->maSoTinh] = true;
+                hd.themVao(hienTai->maSoTinh);
             }
+            hienTai = hienTai->tiepTheo;
         }
     }
     cout << "KET THUC\n";
