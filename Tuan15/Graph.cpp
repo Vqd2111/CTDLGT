@@ -1,29 +1,21 @@
-#include <iostream>
-using namespace std;
+// (Cac phan header giu nguyen...)
+void duyetRongMaTran(int batDau, int maTranKe[SO_DINH][SO_DINH], const char* ten[]) {
+    bool daTham[SO_DINH] = {false};
+    HangDoi hd; hd.khoiTao();
 
-const int SO_DINH = 11;
+    daTham[batDau] = true;
+    hd.themVao(batDau);
 
-struct NutDanhSach {
-    int maSoTinh;
-    NutDanhSach* tiepTheo;
-};
-
-struct DoThiDanhSach {
-    NutDanhSach* danhSachDau[SO_DINH];
-
-    void khoiTao() {
-        for (int i = 0; i < SO_DINH; i++) danhSachDau[i] = nullptr;
+    cout << "BFS (Ma tran ke):      ";
+    while (!hd.laRong()) {
+        int u = hd.layRa();
+        cout << ten[u] << " -> ";
+        for (int v = 0; v < SO_DINH; v++) {
+            if (maTranKe[u][v] == 1 && !daTham[v]) {
+                daTham[v] = true;
+                hd.themVao(v);
+            }
+        }
     }
-
-    void themVaoDau(int u, int v) {
-        NutDanhSach* nutMoi = new NutDanhSach{v, danhSachDau[u]};
-        danhSachDau[u] = nutMoi;
-    }
-
-    void themCanh(int u, int v) {
-        themVaoDau(u, v);
-        themVaoDau(v, u);
-    }
-};
-
-int main() { return 0; }
+    cout << "KET THUC\n";
+}
