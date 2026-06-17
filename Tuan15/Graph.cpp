@@ -1,23 +1,28 @@
 #include <iostream>
-#include <string>
-
 using namespace std;
 
 const int SO_DINH = 11;
-const char* TEN_TINH[SO_DINH] = {"HN", "TN", "BN", "BG", "UB", "HP", "HD", "HY", "PL", "HB", "ST"};
 
-struct DoThiMaTran {
-    int maTranKe[SO_DINH][SO_DINH];
+struct NutDanhSach {
+    int maSoTinh;
+    NutDanhSach* tiepTheo;
+};
+
+struct DoThiDanhSach {
+    NutDanhSach* danhSachDau[SO_DINH];
 
     void khoiTao() {
-        for (int i = 0; i < SO_DINH; i++)
-            for (int j = 0; j < SO_DINH; j++)
-                maTranKe[i][j] = 0;
+        for (int i = 0; i < SO_DINH; i++) danhSachDau[i] = nullptr;
+    }
+
+    void themVaoDau(int u, int v) {
+        NutDanhSach* nutMoi = new NutDanhSach{v, danhSachDau[u]};
+        danhSachDau[u] = nutMoi;
     }
 
     void themCanh(int u, int v) {
-        maTranKe[u][v] = 1;
-        maTranKe[v][u] = 1; // Do thi vo huong
+        themVaoDau(u, v);
+        themVaoDau(v, u);
     }
 };
 
