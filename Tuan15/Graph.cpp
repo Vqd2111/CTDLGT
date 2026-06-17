@@ -4,31 +4,21 @@
 using namespace std;
 
 const int SO_DINH = 11;
+const char* TEN_TINH[SO_DINH] = {"HN", "TN", "BN", "BG", "UB", "HP", "HD", "HY", "PL", "HB", "ST"};
 
-// Cau truc Hang doi tu dinh nghia (Manual Queue)
-struct HangDoi {
-    int duLieu[SO_DINH + 5];
-    int dau, cuoi;
+struct DoThiMaTran {
+    int maTranKe[SO_DINH][SO_DINH];
 
     void khoiTao() {
-        dau = 0;
-        cuoi = 0;
+        for (int i = 0; i < SO_DINH; i++)
+            for (int j = 0; j < SO_DINH; j++)
+                maTranKe[i][j] = 0;
     }
 
-    bool laRong() {
-        return dau == cuoi;
-    }
-
-    void themVao(int giaTri) {
-        duLieu[cuoi++] = giaTri;
-    }
-
-    int layRa() {
-        return duLieu[dau++];
+    void themCanh(int u, int v) {
+        maTranKe[u][v] = 1;
+        maTranKe[v][u] = 1; // Do thi vo huong
     }
 };
 
-int main() {
-    cout << "--- KHOI TAO HANG DOI THANH CONG ---\n";
-    return 0;
-}
+int main() { return 0; }
