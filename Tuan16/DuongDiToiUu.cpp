@@ -8,6 +8,9 @@ using namespace std;
 const int SO_TINH = 11;
 const int VO_CUC = 999999;
 
+// [MỚI] Định nghĩa Pair cho hàng đợi ưu tiên của Dijkstra
+typedef pair<int, int> Dinh_ChiPhi;
+
 string tenCacTinh[SO_TINH] = {
     "Ha Noi", "Thai Nguyen", "Bac Ninh", "Bac Giang", "Uong Bi",
     "Hai Phong", "Hai Duong", "Hung Yen", "Phu Ly", "Hoa Binh", "Son Tay"
@@ -43,19 +46,14 @@ void inMaTran(int maTran[SO_TINH][SO_TINH], int kichThuoc) {
     }
 }
 
-// [MỚI] Thuat toan Warshall
 void thuatToanWarshall(MangLuoiGiaoThong ml, int maTranLienThong[SO_TINH][SO_TINH]) {
     int n = ml.soLuongDinh;
-    // Buoc 1: Copy ma tran hoac gan 1 cho duong cheo
     for(int i = 0; i < n; i++) {
         for(int j = 0; j < n; j++) {
-            if(i == j || ml.maTranKhoangCach[i][j] != 0) 
-                maTranLienThong[i][j] = 1;
-            else 
-                maTranLienThong[i][j] = 0;
+            if(i == j || ml.maTranKhoangCach[i][j] != 0) maTranLienThong[i][j] = 1;
+            else maTranLienThong[i][j] = 0;
         }
     }
-    // Buoc 2: Chay cong thuc bao dong chuyen tiep
     for(int k = 0; k < n; k++) {
         for(int i = 0; i < n; i++) {
             for(int j = 0; j < n; j++) {
@@ -66,7 +64,41 @@ void thuatToanWarshall(MangLuoiGiaoThong ml, int maTranLienThong[SO_TINH][SO_TIN
     }
 }
 
+// [MỚI] Thuat toan Dijkstra tìm chi phí tối thiểu
+void thuatToanDijkstra(MangLuoiGiaoThong ml, int startNode, int khoangCachNganNhat[], int vetLui[]) {
+    int n = ml.soLuongDinh;
+    priority_queue<Dinh_ChiPhi, vector<Dinh_ChiPhi>, greater<Dinh_ChiPhi>> pq;
+
+    for(int i = 0; i < n; i++) {
+        khoangCachNganNhat[i] = VO_CUC;
+        vetLui[i] = -1;
+    }
+
+    khoangCachNganNhat[startNode] = 0;
+    pq.push({0, startNode}); 
+
+    while(!pq.empty()) {
+        int u = pq.top().second;
+        int chiPhi_u = pq.top().first;
+        pq.pop();
+
+        if(chiPhi_u > khoangCachNganNhat[u]) continue;
+
+        for(int v = 0; v < n; v++) {
+            if(ml.maTranKhoangCach[u][v] != 0) { 
+                int chiPhiMoi = khoangCachNganNhat[u] + ml.maTranKhoangCach[u][v];
+                if(chiPhiMoi < khoangCachNganNhat[v]) {
+                    khoangCachNganNhat[v] = chiPhiMoi;
+                    vetLui[v] = u;
+                    pq.push({chiPhiMoi, v});
+                }
+            }
+        }
+    }
+}
+
 int main() {
+    // ... (Phần main hiện tại giữ nguyên, ta chỉ khai báo hàm ở trên trước)
     MangLuoiGiaoThong banDo;
     khoiTaoMangLuoi(banDo, SO_TINH);
 
@@ -79,17 +111,8 @@ int main() {
         themTuyenDuong(banDo, dsTuyenDuong[i][0], dsTuyenDuong[i][1], dsTuyenDuong[i][2]);
     }
 
-    // [MỚI] Goi va in ket qua Warshall
     int mtWarshall[SO_TINH][SO_TINH];
     thuatToanWarshall(banDo, mtWarshall);
-    
-    cout << "\n=== MA TRAN WARSHALL (KIEM TRA LIEN THONG) ===\n\n";
-    inMaTran(mtWarshall, SO_TINH);
-
-    if(mtWarshall[0][4] == 1)
-        cout << "\n=> KET LUAN: Co the di tu Ha Noi den Uong Bi.\n";
-    else
-        cout << "\n=> KET LUAN: Khong the di tu Ha Noi den Uong Bi.\n";
 
     return 0;
 }
