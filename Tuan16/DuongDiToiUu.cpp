@@ -8,7 +8,6 @@ using namespace std;
 const int SO_TINH = 11;
 const int VO_CUC = 999999;
 
-// [MỚI] Định nghĩa Pair cho hàng đợi ưu tiên của Dijkstra
 typedef pair<int, int> Dinh_ChiPhi;
 
 string tenCacTinh[SO_TINH] = {
@@ -64,7 +63,6 @@ void thuatToanWarshall(MangLuoiGiaoThong ml, int maTranLienThong[SO_TINH][SO_TIN
     }
 }
 
-// [MỚI] Thuat toan Dijkstra tìm chi phí tối thiểu
 void thuatToanDijkstra(MangLuoiGiaoThong ml, int startNode, int khoangCachNganNhat[], int vetLui[]) {
     int n = ml.soLuongDinh;
     priority_queue<Dinh_ChiPhi, vector<Dinh_ChiPhi>, greater<Dinh_ChiPhi>> pq;
@@ -97,8 +95,17 @@ void thuatToanDijkstra(MangLuoiGiaoThong ml, int startNode, int khoangCachNganNh
     }
 }
 
+// [MỚI] Ham de quy in ra lo trinh
+void truyVetDuongDi(int dichDen, int vetLui[]) {
+    if(dichDen == -1) return;
+    
+    truyVetDuongDi(vetLui[dichDen], vetLui);
+    
+    if(vetLui[dichDen] != -1) cout << " -> ";
+    cout << tenCacTinh[dichDen];
+}
+
 int main() {
-    // ... (Phần main hiện tại giữ nguyên, ta chỉ khai báo hàm ở trên trước)
     MangLuoiGiaoThong banDo;
     khoiTaoMangLuoi(banDo, SO_TINH);
 
@@ -111,8 +118,28 @@ int main() {
         themTuyenDuong(banDo, dsTuyenDuong[i][0], dsTuyenDuong[i][1], dsTuyenDuong[i][2]);
     }
 
+    cout << "=== MA TRAN KHOANG CACH BAN DAU ===\n\n";
+    inMaTran(banDo.maTranKhoangCach, SO_TINH);
+
     int mtWarshall[SO_TINH][SO_TINH];
     thuatToanWarshall(banDo, mtWarshall);
+
+    cout << "\n\n=== MA TRAN WARSHALL (KIEM TRA LIEN THONG) ===\n\n";
+    inMaTran(mtWarshall, SO_TINH);
+
+    if(mtWarshall[0][4] == 1) cout << "\n=> Co duong di tu Ha Noi den Uong Bi\n";
+    else cout << "\n=> Khong co duong di tu Ha Noi den Uong Bi\n";
+
+    // [MỚI] Goi Dijkstra va truy vet
+    int chiPhi[SO_TINH];
+    int vet[SO_TINH];
+    thuatToanDijkstra(banDo, 0, chiPhi, vet);
+
+    cout << "\n=== DIJKSTRA - DUONG DI NGAN NHAT ===\n";
+    cout << "Tong so chang tu Ha Noi (0) den Uong Bi (4): " << chiPhi[4] << "\n";
+    cout << "Chi tiet lo trinh: ";
+    truyVetDuongDi(4, vet);
+    cout << "\n";
 
     return 0;
 }
