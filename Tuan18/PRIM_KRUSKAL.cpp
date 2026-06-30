@@ -15,7 +15,6 @@ struct Matran {
     int matrix[SO_TINH][SO_TINH];
 };
 
-// Khoi tao ma tran ke rong
 void KhoiTaoMaTran(Matran &g, int soDinh) {
     g.n = soDinh;
     for (int i = 0; i < soDinh; i++) {
@@ -23,13 +22,11 @@ void KhoiTaoMaTran(Matran &g, int soDinh) {
     }
 }
 
-// Them tuyen duong hai chieu vao do thi
 void ThemDuong(Matran &g, int u, int v, int ts) {
     g.matrix[u][v] = ts;
     g.matrix[v][u] = ts;
 }
 
-// Hien thi ma tran ra man hinh
 void InMaTran(int P[SO_TINH][SO_TINH], int n) {
     cout << setw(6) << " ";
     for (int j = 0; j < n; j++) cout << setw(5) << DSTinh[j];
@@ -77,6 +74,49 @@ void ThuatToanDijkstra(Matran g, int start) {
     }
 }
 
+// Thuat toan Prim tim cay khung nho nhat va xuat duoi dang ma tran
+void ThuatToanPrim(Matran g) {
+    int n = g.n;
+    vector<bool> inMST(n, false);
+    vector<int> key(n, INF);
+    vector<int> parent(n, -1);
+
+    key[0] = 0; 
+
+    for (int count = 0; count < n - 1; count++) {
+        int min_key = INF, u = -1;
+        for (int v = 0; v < n; v++) {
+            if (!inMST[v] && key[v] < min_key) {
+                min_key = key[v];
+                u = v;
+            }
+        }
+        
+        if (u == -1) break;
+        inMST[u] = true;
+
+        for (int v = 0; v < n; v++) {
+            if (g.matrix[u][v] > 0 && !inMST[v] && g.matrix[u][v] < key[v]) {
+                parent[v] = u;
+                key[v] = g.matrix[u][v];
+            }
+        }
+    }
+
+    int mstMatrix[SO_TINH][SO_TINH] = {0};
+    int tongTrongSo = 0;
+    for (int i = 1; i < n; i++) {
+        if (parent[i] != -1) {
+            mstMatrix[i][parent[i]] = g.matrix[i][parent[i]];
+            mstMatrix[parent[i]][i] = g.matrix[i][parent[i]];
+            tongTrongSo += g.matrix[i][parent[i]];
+        }
+    }
+    
+    cout << "\n=== PRIM: MA TRAN DINH KE CAY KHUNG (Tong trong so: " << tongTrongSo << ") ===\n\n";
+    InMaTran(mstMatrix, n);
+}
+
 int main() {
     Matran g;
     KhoiTaoMaTran(g, SO_TINH);
@@ -96,6 +136,7 @@ int main() {
     InMaTran(g.matrix, SO_TINH);
 
     ThuatToanDijkstra(g, 0);
+    ThuatToanPrim(g);
 
     return 0;
 }
