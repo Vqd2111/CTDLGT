@@ -3,6 +3,7 @@
 #include <iomanip>
 #include <vector>
 #include <queue>
+#include <algorithm>
 
 using namespace std;
 
@@ -15,6 +16,11 @@ struct Matran {
     int matrix[SO_TINH][SO_TINH];
 };
 
+struct Canh { 
+    int u, v, ts; 
+};
+
+// Khoi tao ma tran ke rong
 void KhoiTaoMaTran(Matran &g, int soDinh) {
     g.n = soDinh;
     for (int i = 0; i < soDinh; i++) {
@@ -22,11 +28,13 @@ void KhoiTaoMaTran(Matran &g, int soDinh) {
     }
 }
 
+// Them tuyen duong hai chieu vao do thi
 void ThemDuong(Matran &g, int u, int v, int ts) {
     g.matrix[u][v] = ts;
     g.matrix[v][u] = ts;
 }
 
+// Hien thi ma tran ra man hinh
 void InMaTran(int P[SO_TINH][SO_TINH], int n) {
     cout << setw(6) << " ";
     for (int j = 0; j < n; j++) cout << setw(5) << DSTinh[j];
@@ -74,7 +82,7 @@ void ThuatToanDijkstra(Matran g, int start) {
     }
 }
 
-// Thuat toan Prim tim cay khung nho nhat va xuat duoi dang ma tran
+// Thuat toan Prim tim cay khung nho nhat
 void ThuatToanPrim(Matran g) {
     int n = g.n;
     vector<bool> inMST(n, false);
@@ -117,6 +125,52 @@ void ThuatToanPrim(Matran g) {
     InMaTran(mstMatrix, n);
 }
 
+// Cac ham bo tro cho thuat toan Kruskal
+bool SoSanhCanh(Canh a, Canh b) { 
+    return a.ts < b.ts; 
+}
+
+int TimGoc(int cha[], int i) {
+    if (cha[i] == i) return i;
+    return cha[i] = TimGoc(cha, cha[i]); 
+}
+
+// Thuat toan Kruskal tim cay khung nho nhat bang danh sach canh
+void ThuatToanKruskal(Matran g) {
+    int n = g.n;
+    vector<Canh> dsCanh;
+    
+    for (int i = 0; i < n; i++) {
+        for (int j = i + 1; j < n; j++) {
+            if (g.matrix[i][j] > 0) dsCanh.push_back({i, j, g.matrix[i][j]});
+        }
+    }
+    sort(dsCanh.begin(), dsCanh.end(), SoSanhCanh);
+
+    int cha[SO_TINH];
+    for (int i = 0; i < n; i++) cha[i] = i;
+
+    int mstMatrix[SO_TINH][SO_TINH] = {0};
+    int tongChiPhi = 0, soCanhDaChon = 0;
+
+    for (auto canh : dsCanh) {
+        int gocU = TimGoc(cha, canh.u);
+        int gocV = TimGoc(cha, canh.v);
+        
+        if (gocU != gocV) {
+            mstMatrix[canh.u][canh.v] = canh.ts;
+            mstMatrix[canh.v][canh.u] = canh.ts;
+            tongChiPhi += canh.ts;
+            cha[gocU] = gocV; 
+            
+            soCanhDaChon++;
+            if (soCanhDaChon == n - 1) break; 
+        }
+    }
+    cout << "\n=== KRUSKAL: MA TRAN DINH KE CAY KHUNG (Tong trong so: " << tongChiPhi << ") ===\n\n";
+    InMaTran(mstMatrix, n);
+}
+
 int main() {
     Matran g;
     KhoiTaoMaTran(g, SO_TINH);
@@ -137,6 +191,7 @@ int main() {
 
     ThuatToanDijkstra(g, 0);
     ThuatToanPrim(g);
+    ThuatToanKruskal(g);
 
     return 0;
 }
